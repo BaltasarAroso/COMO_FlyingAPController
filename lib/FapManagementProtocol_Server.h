@@ -14,20 +14,68 @@
 // These files should not be modified.
 // =========================================================
 
-
 #pragma once
-
 
 // =========================================================
 //           DEFINES
 // =========================================================
 
+// ----- MAVLINK PROTOCOL ----- //
+
+// Use MAVLink helper functions
+//#define MAVLINK_USE_CONVENIENCE_FUNCTIONS
+
+
+// ----- FAP MANAGEMENT PROTOCOL - MESSAGES ----- //
+
+// Protocol parameters
+#define PROTOCOL_PARAMETERS_USER_ID						"userId"
+#define PROTOCOL_PARAMETERS_MSG_TYPE					"msgType"
+#define PROTOCOL_PARAMETERS_GPS_COORDINATES				"gpsCoordinates"
+#define PROTOCOL_PARAMETERS_GPS_COORDINATES_LAT			"lat"
+#define PROTOCOL_PARAMETERS_GPS_COORDINATES_LON			"lon"
+#define PROTOCOL_PARAMETERS_GPS_COORDINATES_ALT			"alt"
+#define PROTOCOL_PARAMETERS_GPS_COORDINATES_TIMESTAMP	"timestamp"
+#define PROTOCOL_PARAMETERS_GPS_TIMESTAMP				"gpsTimestamp"
+
+// Protocol "msgType" values
+typedef enum _ProtocolMsgType
+{
+	USER_ASSOCIATION_REQUEST		= 1,
+	USER_ASSOCIATION_ACCEPTED		= 2,
+	USER_ASSOCIATION_REJECTED		= 3,
+	USER_DESASSOCIATION_REQUEST	= 4,
+	USER_DESASSOCIATION_ACK			= 5,
+	GPS_COORDINATES_UPDATE			= 6,
+	GPS_COORDINATES_ACK					= 7
+} ProtocolMsgType;
+
+
+// ----- FAP MANAGEMENT PROTOCOL - PARAMETERS ----- //
+
+// GPS coordinates update period (in seconds)
+#define GPS_COORDINATES_UPDATE_PERIOD_SECONDS			10
+#define GPS_COORDINATES_UPDATE_TIMEOUT_SECONDS		(2 * GPS_COORDINATES_UPDATE_PERIOD_SECONDS)
+
+// Max allowed distance from the users to the FAP (in meters)
+#define MAX_ALLOWED_DISTANCE_FROM_FAP_METERS			300
+
+
+// ----- FAP MANAGEMENT PROTOCOL - SERVER ADDRESS ----- //
+#define SERVER_IP_ADDRESS		"10.0.0.254"
+#define SERVER_PORT_NUMBER		40123
+
+
+// =========================================================
+//           OTHER DEFINES
+// =========================================================
+
 // Return codes
-#define RETURN_VALUE_OK				0
+#define RETURN_VALUE_OK					0
 #define RETURN_VALUE_ERROR			(-1)
 
 // Size of an ISO8601 timestamp (including '\0')
-#define TIMESTAMP_ISO8601_SIZE		21
+#define TIMESTAMP_ISO8601_SIZE	21
 
 // Maximum simultaneously associated users
 #define MAX_ASSOCIATED_USERS		10
@@ -70,7 +118,7 @@ typedef struct _GpsNedCoordinates
  * Initialize the FAP Management Protocol operation.
  * This function should initialize the FAP Management Protocol's internal components,
  * namely the server socket.
- * 
+ *
  * @return		Return RETURN_VALUE_OK if there are no errors;
  * 				otherwise, return RETURN_VALUE_ERROR.
  */
@@ -80,7 +128,7 @@ int initializeFapManagementProtocol();
  * Terminate the FAP Management Protocol operation.
  * This function should terminate the FAP Management Protocol's operation,
  * namely close and dispose the server socket.
- * 
+ *
  * @return		Return RETURN_VALUE_OK if there are no errors;
  * 				otherwise, return RETURN_VALUE_ERROR.
  */

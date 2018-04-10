@@ -8,46 +8,92 @@
 
 // Module headers
 #include "FapController.h"
-#include "FapManagementProtocol_Server.h"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
 
 // =========================================================
 //           DEFINES
 // =========================================================
 
 // FAP's position update period (in seconds)
-#define T_FAP_POSITION_UPDATE_SECONDS	T_GPS_COORDINATES_UPDATE_SECONDS
+#define T_FAP_POSITION_UPDATE_SECONDS	GPS_COORDINATES_UPDATE_PERIOD_SECONDS
 
 
 // =========================================================
 //           FUNCTIONS
 // =========================================================
 
-// TODO: Develop the required functions to implement the FAP Controller
+int averageUserCoords(GpsNedCoordinates *userCoords, GpsNedCoordinates fapCoords, int numUsers, GpsNedCoordinates *newCoord) {
+	if (userCoords == NULL) {
+		return RETURN_VALUE_ERROR;
+	}
+	if (!numUsers) {
+		return RETURN_VALUE_OK;
+	}
+
+	int sumX = 0, sumY = 0;
+
+	for (int i = 0; i < numUsers; i++) {
+		sumX += userCoords[i].x;
+		sumY += userCoords[i].y;
+	}
+	newCoord->x = sumX/(float)numUsers;
+	newCoord->y = sumY/(float)numUsers;
+	newCoord->z = fapCoords.z;
+
+	return RETURN_VALUE_OK;
+}
+
+void ALARMhandler(int sig) {
+  fprintf(stderr, "Alarm finished!\n");
+  alarm(T_FAP_POSITION_UPDATE_SECONDS); // new alarm
+	updateFapCoordinates();
+}
 
 
 // =========================================================
 //           PUBLIC API
 // =========================================================
-int initializeFapController()
-{
-	// TODO: Implement function
+int initializeFapController() {
+	if (initializeFapManagementProtocol() == RETURN_VALUE_ERROR) {
+		return RETURN_VALUE_ERROR;
+	}
+
+	signal(SIGALRM, ALARMhandler); // start the alarm
+	alarm(T_FAP_POSITION_UPDATE_SECONDS);
 
 	return RETURN_VALUE_OK;
 }
 
 
-int terminateFapController()
-{
-	// TODO: Implement function
+int terminateFapController() {
+	if (terminateFapManagementProtocol() == RETURN_VALUE_ERROR) {
+		return RETURN_VALUE_ERROR;
+	}
+	fprintf(stderr, "Terminate Alarm and End Program!\n");
+	alarm(0);
 
 	return RETURN_VALUE_OK;
 }
 
 
-int updateFapCoordinates()
-{
-	// TODO: Implement function
+int updateFapCoordinates() {
 
-	return RETURN_VALUE_OK;
+	GpsNedCoordinates *userCoords, fapCoords, newCoord;
+	userCoords = (GpsNedCoordinates*) calloc (MAX_ASSOCIATED_USERS, sizeof(GpsNedCoordinates));
+	int numUsers;
+
+	if (getAllUsersGpsNedCoordinates(userCoords, &numUsers) == RETURN_VALUE_ERROR) {
+		return RETURN_VALUE_ERROR;
+	}
+	if (getFapGpsNedCoordinates(&fapCoords) == RETURN_VALUE_ERROR) {
+		return RETURN_VALUE_ERROR;
+	}
+	if (averageUserCoords(userCoords, fapCoords, numUsers, &newCoord) == RETURN_VALUE_ERROR) {
+		return RETURN_VALUE_ERROR;
+	}
+
+	return moveFapToGpsNedCoordinates(&newCoord);
 }
