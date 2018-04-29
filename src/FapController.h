@@ -6,9 +6,10 @@
 *                             FEUP | MIEEC / MIEIC
 *******************************************************************************/
 
-#include "FapManagementProtocol_Server.h"
 #pragma once
 
+// Module headers
+#include "FapManagementProtocol_Server.h"
 
 // =========================================================
 //           PUBLIC API

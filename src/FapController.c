@@ -8,8 +8,8 @@
 
 // Module headers
 #include "FapController.h"
-#include <stdio.h>
-#include <stdlib.h>
+
+// Extra headers for alarm function
 #include <signal.h>
 #include <unistd.h>
 
@@ -18,7 +18,7 @@
 // =========================================================
 
 // FAP's position update period (in seconds)
-#define T_FAP_POSITION_UPDATE_SECONDS	GPS_COORDINATES_UPDATE_PERIOD_SECONDS
+#define FAP_POSITION_UPDATE_PERIOD_SECONDS	10
 
 
 // =========================================================
@@ -47,8 +47,8 @@ int averageUserCoords(GpsNedCoordinates *userCoords, GpsNedCoordinates fapCoords
 }
 
 void ALARMhandler(int sig) {
-  fprintf(stderr, "Alarm finished!\n");
-  alarm(T_FAP_POSITION_UPDATE_SECONDS); // new alarm
+  fprintf(stderr, "\n\n\t\t!!! TIME TO SLEEP FINISHED !!!\n\n");
+  alarm(FAP_POSITION_UPDATE_PERIOD_SECONDS); // new alarm
 	updateFapCoordinates();
 }
 
@@ -62,7 +62,7 @@ int initializeFapController() {
 	}
 
 	signal(SIGALRM, ALARMhandler); // start the alarm
-	alarm(T_FAP_POSITION_UPDATE_SECONDS);
+	alarm(FAP_POSITION_UPDATE_PERIOD_SECONDS);
 
 	return RETURN_VALUE_OK;
 }

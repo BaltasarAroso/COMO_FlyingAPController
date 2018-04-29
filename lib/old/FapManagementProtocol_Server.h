@@ -9,34 +9,105 @@
 // =========================================================
 // IMPORTANT NOTE:
 //
-// The FapManagementProtocol_Server.{c,h} library included in
-// the FAP Controller project has a very simple implementation,
-// which enables the test of the FAP Controller.
+// The FapManagementProtocol_Server{.c,.h} are included in
+// the project just to build the FAP Controller project.
 // These files should not be modified.
 // =========================================================
 
 #pragma once
 
-// Module headers
-#include "GpsCoordinates.h"
-
-// C headers
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
-
 // =========================================================
 //           DEFINES
 // =========================================================
 
+// ----- MAVLINK PROTOCOL ----- //
+
+// Use MAVLink helper functions
+//#define MAVLINK_USE_CONVENIENCE_FUNCTIONS
+
+
+// ----- FAP MANAGEMENT PROTOCOL - MESSAGES ----- //
+
+// Protocol parameters
+#define PROTOCOL_PARAMETERS_USER_ID						"userId"
+#define PROTOCOL_PARAMETERS_MSG_TYPE					"msgType"
+#define PROTOCOL_PARAMETERS_GPS_COORDINATES				"gpsCoordinates"
+#define PROTOCOL_PARAMETERS_GPS_COORDINATES_LAT			"lat"
+#define PROTOCOL_PARAMETERS_GPS_COORDINATES_LON			"lon"
+#define PROTOCOL_PARAMETERS_GPS_COORDINATES_ALT			"alt"
+#define PROTOCOL_PARAMETERS_GPS_COORDINATES_TIMESTAMP	"timestamp"
+#define PROTOCOL_PARAMETERS_GPS_TIMESTAMP				"gpsTimestamp"
+
+// Protocol "msgType" values
+typedef enum _ProtocolMsgType
+{
+	USER_ASSOCIATION_REQUEST		= 1,
+	USER_ASSOCIATION_ACCEPTED		= 2,
+	USER_ASSOCIATION_REJECTED		= 3,
+	USER_DESASSOCIATION_REQUEST	= 4,
+	USER_DESASSOCIATION_ACK			= 5,
+	GPS_COORDINATES_UPDATE			= 6,
+	GPS_COORDINATES_ACK					= 7
+} ProtocolMsgType;
+
+
+// ----- FAP MANAGEMENT PROTOCOL - PARAMETERS ----- //
+
+// GPS coordinates update period (in seconds)
+#define GPS_COORDINATES_UPDATE_PERIOD_SECONDS			10
+#define GPS_COORDINATES_UPDATE_TIMEOUT_SECONDS		(2 * GPS_COORDINATES_UPDATE_PERIOD_SECONDS)
+
+// Max allowed distance from the users to the FAP (in meters)
+#define MAX_ALLOWED_DISTANCE_FROM_FAP_METERS			300
+
+
+// ----- FAP MANAGEMENT PROTOCOL - SERVER ADDRESS ----- //
+#define SERVER_IP_ADDRESS		"10.0.0.254"
+#define SERVER_PORT_NUMBER		40123
+
+
+// =========================================================
+//           OTHER DEFINES
+// =========================================================
+
 // Return codes
-#define RETURN_VALUE_OK				0
+#define RETURN_VALUE_OK					0
 #define RETURN_VALUE_ERROR			(-1)
+
+// Size of an ISO8601 timestamp (including '\0')
+#define TIMESTAMP_ISO8601_SIZE	21
 
 // Maximum simultaneously associated users
 #define MAX_ASSOCIATED_USERS		10
+
+
+// =========================================================
+//           STRUCTS
+// =========================================================
+
+/**
+ * GPS coordinates in RAW format (lat, lon, alt).
+ */
+typedef struct _GpsRawCoordinates
+{
+	float latitude;								// Latitude (in degrees)
+	float longitude;							// Longitude (in degrees)
+	float altitude;								// Altitude (in meters)
+	char timestamp[TIMESTAMP_ISO8601_SIZE];		// Timestamp in ISO8601 format
+} GpsRawCoordinates;
+
+
+/**
+ * GPS coordinates in NED format (x, y, z), relative to a given
+ * origin coordinates.
+ */
+typedef struct _GpsNedCoordinates
+{
+	float x;									// X relative to origin coordinates (in meters)
+	float y;									// Y relative to origin coordinates (in meters)
+	float z;									// Z relative to origin coordinates (in meters)
+	char timestamp[TIMESTAMP_ISO8601_SIZE];		// Timestamp in ISO8601 format
+} GpsNedCoordinates;
 
 
 // =========================================================
