@@ -14,6 +14,7 @@ SRC		= src
 LIB		= lib
 TEST	= test
 
+MATH_LIBRARY	= m
 TEST_EXECUTABLE	= Test_FapController
 
 
@@ -27,7 +28,7 @@ run_test: all
 
 
 $(BIN)/$(TEST_EXECUTABLE): $(TEST)/* $(SRC)/* $(LIB)/*
-	$(CC) $(CFLAGS) -I$(SRC) -I$(LIB) $(TEST)/*.c $(SRC)/*.c $(LIB)/*.c -o $@
+	$(CC) $(CFLAGS) -I$(SRC) -I$(LIB) $(TEST)/*.c $(SRC)/*.c $(LIB)/*.c -l$(MATH_LIBRARY) -o $@
 
 
 .PHONY: clean
