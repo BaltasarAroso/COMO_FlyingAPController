@@ -95,5 +95,7 @@ int updateFapCoordinates() {
 		return RETURN_VALUE_ERROR;
 	}
 
+	free(userCoords);
+
 	return moveFapToGpsNedCoordinates(&newCoord);
 }
