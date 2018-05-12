@@ -49,7 +49,7 @@ int averageUserCoords(GpsNedCoordinates *userCoords, GpsNedCoordinates fapCoords
 void ALARMhandler(int sig) {
   fprintf(stderr, "\n\n\t\t!!! TIME TO SLEEP FINISHED !!!\n\n");
   alarm(FAP_POSITION_UPDATE_PERIOD_SECONDS); // new alarm
-	updateFapCoordinates();
+  updateFapCoordinates();
 }
 
 
