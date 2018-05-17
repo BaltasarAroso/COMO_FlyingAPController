@@ -4,6 +4,7 @@ This project belongs to the Curricular Unit of Mobile Communications and it was 
 * FAP Android App
 * FAP Management Protocol
 * FAP Controller + AP.
+
 This report is mainly about the last one, where we’ve needed to implement the FAP Controller in C and to configure the Access Point.
 
 ## Execution for the FAP Controller Code Test
