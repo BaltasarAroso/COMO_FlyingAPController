@@ -16,4 +16,4 @@ make run_test
 ```
 
 ## Execution for the FAP Access Point test
-The configurations files for this point are in the folder "AccessPoint_config" and those configurations are explained in the final report 'Report_v2_final'.
+The configurations files for this point are in the folder "AccessPoint_config" and those configurations are explained in the final report 'Report_Final_Version'.
