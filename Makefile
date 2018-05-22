@@ -6,15 +6,15 @@
 #                             FEUP | MIEEC / MIEIC
 ###############################################################################
 
-CC		= gcc
-CFLAGS	= -Wall #-Wextra
+CC		 = gcc
+CFLAGS = -Wall #-Wextra
 
 BIN		= bin
 SRC		= src
 LIB		= lib
 TEST	= test
 
-MATH_LIBRARY	= m
+MATH_LIBRARY		= m
 PTHREAD_LIBRARY	= pthread
 TEST_EXECUTABLE	= Test_FapController
 
