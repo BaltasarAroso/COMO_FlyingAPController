@@ -9,11 +9,11 @@ This project belongs to the Curricular Unit of Mobile Communications and it was 
 
 This report is mainly about the last one, where we’ve needed to implement the FAP Controller in C and to configure the Access Point.
 
-## Execution for the FAP Controller Code Test
+## Usage - FAP Controller Code Test
 ```
 git clone https://github.com/BaltasarAroso/FAPController_AP.git
 make run_test
 ```
 
-## Execution for the FAP Access Point test
+## Usage - FAP Access Point test
 The configurations files for this point are in the folder "AccessPoint_config" and those configurations are explained in the final report 'Report_Final_Version'.
